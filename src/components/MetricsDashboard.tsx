@@ -105,8 +105,10 @@ export default function MetricsDashboard() {
   }
 
   const verdict = data ? getVerdict(data.conversionRate, data.visits) : null;
-  const barW = data ? Math.min((data.conversionRate / 10) * 100, 100) : 0;
-  const ctrW = data ? Math.min(data.ctr, 100) : 0;
+  const sampleGoal = 150;
+  const conversionGoal = 10;
+  const sampleW = data ? Math.min((data.visits / sampleGoal) * 100, 100) : 0;
+  const conversionW = data ? Math.min((data.conversionRate / conversionGoal) * 100, 100) : 0;
 
   return (
     <div className={styles.page}>
@@ -171,24 +173,24 @@ export default function MetricsDashboard() {
           <div className={styles.bars}>
             <div className={styles.barCard}>
               <div className={styles.barHeader}>
-                <span className={styles.barLabel}>Progreso hacia meta (10%)</span>
-                <span className={styles.barVal}>{data.conversionRate.toFixed(1)}%</span>
+                <span className={styles.barLabel}>Progreso de muestra (meta 150 visitas)</span>
+                <span className={styles.barVal}>{sampleW.toFixed(1)}%</span>
               </div>
               <div className={styles.track}>
-                <div className={`${styles.fill} ${styles.fillBlue}`} style={{ width: `${barW}%` }} />
+                <div className={`${styles.fill} ${styles.fillBlue}`} style={{ width: `${sampleW}%` }} />
               </div>
-              <div className={styles.barNote}>{data.visits} visitas registradas · meta: 150+</div>
+              <div className={styles.barNote}>{data.visits} visitas de {sampleGoal}</div>
             </div>
 
             <div className={styles.barCard}>
               <div className={styles.barHeader}>
-                <span className={styles.barLabel}>CTR botón "Ir a la app"</span>
-                <span className={styles.barVal}>{data.ctr.toFixed(1)}%</span>
+                <span className={styles.barLabel}>Conversión a registro (meta {conversionGoal}%)</span>
+                <span className={styles.barVal}>{data.conversionRate.toFixed(1)}%</span>
               </div>
               <div className={styles.track}>
-                <div className={`${styles.fill} ${styles.fillViolet}`} style={{ width: `${ctrW}%` }} />
+                <div className={`${styles.fill} ${styles.fillViolet}`} style={{ width: `${conversionW}%` }} />
               </div>
-              <div className={styles.barNote}>{data.appClicks} clics de {data.visits} visitas</div>
+              <div className={styles.barNote}>{data.registrations} registros de {data.visits} visitas</div>
             </div>
           </div>
 

@@ -41,7 +41,7 @@
 
 .link {
   font-size: 13px;
-  color: #94a3b8;
+  color: #334155;
   transition: color 0.18s;
 }
 
@@ -51,5 +51,5 @@
 
 .copy {
   font-size: 11px;
-  color: #334155;
+  color: #64748b;
 }

@@ -54,7 +54,7 @@
 
 .quote {
   font-size: 13px;
-  color: #cbd5e1;
+  color: #334155;
   line-height: 1.7;
   font-style: italic;
   margin-bottom: 18px;
@@ -79,7 +79,7 @@
   font-family: var(--font-display);
   font-size: 14px;
   font-weight: 700;
-  color: #93c5fd;
+  color: #2563eb;
   flex-shrink: 0;
 }
 

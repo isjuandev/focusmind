@@ -1,8 +1,8 @@
 :root {
-  --bg: #070b14;
-  --surface: #0d1422;
-  --card: #111827;
-  --card-hover: #161f30;
+  --bg: #f6f8fc;
+  --surface: #ffffff;
+  --card: #ffffff;
+  --card-hover: #f8fafc;
   --blue: #3b82f6;
   --blue-dim: rgba(59, 130, 246, 0.12);
   --blue-border: rgba(59, 130, 246, 0.3);
@@ -11,9 +11,9 @@
   --green-dim: rgba(16, 185, 129, 0.1);
   --green-border: rgba(16, 185, 129, 0.3);
   --violet: #8b5cf6;
-  --text: #f1f5f9;
+  --text: #0f172a;
   --muted: #64748b;
-  --border: rgba(255, 255, 255, 0.07);
+  --border: rgba(15, 23, 42, 0.12);
   --font-display: "Sora", "Inter", system-ui, sans-serif;
   --font-body: "Manrope", "Inter", system-ui, sans-serif;
 }
@@ -57,9 +57,9 @@ input {
   width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--surface);
+  background: #e2e8f0;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.25);
   border-radius: 2px;
 }

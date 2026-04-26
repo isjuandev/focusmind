@@ -47,11 +47,11 @@
 
 .lastRefresh {
   font-size: 11px;
-  color: #334155;
+  color: #64748b;
 }
 
 .refreshBtn {
-  background: rgba(255, 255, 255, 0.04);
+  background: #ffffff;
   border: 1px solid var(--border);
   color: var(--text);
   border-radius: 8px;
@@ -61,7 +61,7 @@
 }
 
 .refreshBtn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
+  background: #f8fafc;
 }
 
 .refreshBtn:disabled {
@@ -123,7 +123,7 @@
 
 .kpiSub {
   font-size: 11px;
-  color: #475569;
+  color: #64748b;
 }
 
 /* Bars */
@@ -160,7 +160,7 @@
 
 .track {
   height: 6px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #e2e8f0;
   border-radius: 3px;
   overflow: hidden;
   margin-bottom: 6px;
@@ -177,7 +177,7 @@
 
 .barNote {
   font-size: 11px;
-  color: #475569;
+  color: #64748b;
 }
 
 /* Verdict */
@@ -208,7 +208,7 @@
   opacity: 0.7;
 }
 
-.neutral { background: rgba(255,255,255,0.02); border-color: var(--border); color: var(--muted); }
+.neutral { background: #f8fafc; border-color: var(--border); color: var(--muted); }
 .success { background: rgba(16,185,129,0.08); border-color: rgba(16,185,129,0.25); color: #34d399; }
 .warning { background: rgba(251,191,36,0.08); border-color: rgba(251,191,36,0.25); color: #fbbf24; }
 .danger  { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.25); color: #f87171; }
@@ -251,7 +251,7 @@
 
 .criteriaText {
   font-size: 13px;
-  color: #94a3b8;
+  color: #334155;
 }
 
 /* Email list */
@@ -274,7 +274,7 @@
 
 .emptyEmails {
   font-size: 13px;
-  color: #334155;
+  color: #64748b;
   text-align: center;
   padding: 20px 0;
 }
@@ -290,7 +290,7 @@
 .emailItem {
   display: grid;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.02);
+  background: #f8fafc;
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 9px 12px;
@@ -310,7 +310,7 @@
 
 .emailOccupation {
   font-size: 11px;
-  color: #94a3b8;
+  color: #64748b;
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 2px 8px;
@@ -326,7 +326,7 @@
 
 .emailAddr {
   font-size: 13px;
-  color: #cbd5e1;
+  color: #334155;
 }
 
 .emailTs {
@@ -363,7 +363,7 @@
 }
 
 .tokenInput {
-  background: rgba(255, 255, 255, 0.04);
+  background: #ffffff;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 10px 14px;
@@ -378,7 +378,7 @@
 
 .tokenBtn {
   background: var(--blue);
-  color: #fff;
+  color: #ffffff;
   border: none;
   border-radius: 10px;
   padding: 10px 18px;
