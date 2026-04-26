@@ -3,18 +3,18 @@ import styles from "./SocialProof.module.css";
 const quotes = [
   {
     text: "Llevaba años buscando algo que me ayudara con el TDAH sin sentirme abrumado. FocusMind lo hace simple y hasta divertido.",
-    author: "Mariana, 23 años",
-    role: "Estudiante de Diseño",
+    author: "Mariana R.",
+    role: "Estudiante de Diseño, 23 años",
   },
   {
     text: "Los ejercicios de concentración me ayudan a prepararme antes de estudiar. La diferencia es notable desde la primera semana.",
-    author: "Sebastián, 19 años",
-    role: "Estudiante de Ingeniería",
+    author: "Sebastián V.",
+    role: "Estudiante de Ingeniería, 19 años",
   },
   {
     text: "Mi psicóloga me recomendó FocusMind como complemento entre consultas. Es exactamente lo que necesitaba.",
-    author: "Valentina, 27 años",
-    role: "Diseñadora freelance",
+    author: "Valentina C.",
+    role: "Diseñadora freelance, 27 años",
   },
 ];
 
@@ -22,7 +22,7 @@ export default function SocialProof() {
   return (
     <section className={styles.section}>
       <div className={styles.inner}>
-        <p className={styles.eyebrow}>TESTIMONIOS</p>
+        <p className={styles.eyebrow}>LO QUE DICEN</p>
         <h2 className={styles.title}>Personas reales,<br />resultados reales</h2>
         <div className={styles.grid}>
           {quotes.map((q, i) => (

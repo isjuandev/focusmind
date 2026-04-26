@@ -4,7 +4,12 @@ import { useState, useEffect } from "react";
 import styles from "./HeroSection.module.css";
 
 export default function HeroSection() {
-  const [email, setEmail] = useState("");
+  const [form, setForm] = useState({
+    name: "",
+    lastName: "",
+    occupation: "",
+    email: "",
+  });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -21,9 +26,33 @@ export default function HeroSection() {
     }
   }, []);
 
+  async function handleOpenApp(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    const targetUrl = "https://focusmindd1.netlify.app/";
+    try {
+      await fetch("/api/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event: "app_click" }),
+      });
+    } catch {
+      // no-op
+    } finally {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+    }
+  }
+
   async function handleRegister(e: React.FormEvent) {
     e.preventDefault();
-    if (!email || !email.includes("@")) {
+    if (!form.name.trim() || !form.lastName.trim()) {
+      setErrorMsg("Ingresa tu nombre y apellido.");
+      return;
+    }
+    if (!["Estudiante", "Empleado", "No aplica"].includes(form.occupation)) {
+      setErrorMsg("Selecciona a qué te dedicas.");
+      return;
+    }
+    if (!form.email || !form.email.includes("@")) {
       setErrorMsg("Ingresa un correo válido.");
       return;
     }
@@ -33,7 +62,12 @@ export default function HeroSection() {
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          name: form.name.trim(),
+          lastName: form.lastName.trim(),
+          occupation: form.occupation,
+          email: form.email.trim(),
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -42,44 +76,47 @@ export default function HeroSection() {
         return;
       }
       setStatus("success");
+      setForm({ name: "", lastName: "", occupation: "", email: "" });
     } catch {
       setErrorMsg("Error de red. Intenta de nuevo.");
       setStatus("error");
     }
   }
 
-  async function handleAppClick() {
-    await fetch("/api/track", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ event: "app_click" }),
-    }).catch(() => {});
-    window.open("https://focusmindd1.netlify.app/", "_blank", "noopener");
-  }
-
   return (
     <section className={styles.hero}>
-      {/* Glow orb */}
-      <div className={styles.glow} aria-hidden />
-
-      {/* Grid texture */}
-      <div className={styles.grid} aria-hidden />
-
       <div className={styles.inner}>
+        <nav className={styles.nav}>
+          <span className={styles.logo}>FocusMind</span>
+          <div className={styles.navLinks}>
+            <a href="#how-it-works">Cómo funciona</a>
+            <a href="#for-who">Para quién</a>
+            <a href="#features">Características</a>
+          </div>
+          <a
+            href="https://focusmindd1.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.navCta}
+            onClick={handleOpenApp}
+          >
+            Empezar gratis →
+          </a>
+        </nav>
+
         <span className={styles.badge}>
-          <span className={styles.dot} />
-          TDAH · Gamificación · Concentración
+          🧠 Apoyo digital para el TDAH
         </span>
 
         <h1 className={styles.headline}>
-          Entrena tu<br />
-          <span className={styles.gradient}>concentración</span>
-          <br />como nunca
+          Entrena tu mente,<br />
+          domina tu <span className={styles.gradient}>atención</span>
         </h1>
 
         <p className={styles.sub}>
-          FocusMind usa ejercicios gamificados y recordatorios inteligentes
-          para ayudarte a gestionar el TDAH en tu vida diaria.
+          FocusMind es la app diseñada para personas con TDAH y dificultades de
+          concentración. Ejercicios, planeación y reflexión — todo en un solo
+          lugar, mientras esperas tu próxima consulta.
         </p>
 
         {status === "success" ? (
@@ -90,36 +127,75 @@ export default function HeroSection() {
             </div>
           </div>
         ) : (
-          <form className={styles.form} onSubmit={handleRegister} noValidate>
+          <form className={styles.form} onSubmit={handleRegister} noValidate id="registro">
+            <div className={styles.twoCols}>
+              <input
+                type="text"
+                value={form.name}
+                onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+                placeholder="Nombre"
+                className={styles.input}
+                disabled={status === "loading"}
+                aria-label="Nombre"
+              />
+              <input
+                type="text"
+                value={form.lastName}
+                onChange={(e) => setForm((prev) => ({ ...prev, lastName: e.target.value }))}
+                placeholder="Apellido"
+                className={styles.input}
+                disabled={status === "loading"}
+                aria-label="Apellido"
+              />
+            </div>
+            <div className={styles.inputRow}>
+              <select
+                value={form.occupation}
+                onChange={(e) => setForm((prev) => ({ ...prev, occupation: e.target.value }))}
+                className={styles.select}
+                disabled={status === "loading"}
+                aria-label="A qué te dedicas"
+              >
+                <option value="">¿A qué te dedicas?</option>
+                <option value="Estudiante">Estudiante</option>
+                <option value="Empleado">Empleado</option>
+                <option value="No aplica">No aplica</option>
+              </select>
+            </div>
             <div className={styles.inputRow}>
               <input
                 type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={form.email}
+                onChange={(e) => setForm((prev) => ({ ...prev, email: e.target.value }))}
                 placeholder="tu@correo.com"
                 className={styles.input}
                 disabled={status === "loading"}
                 aria-label="Correo electrónico"
               />
+            </div>
+            <div className={styles.submitRow}>
               <button
                 type="submit"
                 className={styles.btnPrimary}
                 disabled={status === "loading"}
               >
-                {status === "loading" ? "..." : "Registrarme gratis"}
+                {status === "loading" ? "..." : "Quiero acceso gratis"}
               </button>
             </div>
             {errorMsg && <p className={styles.errorMsg}>{errorMsg}</p>}
           </form>
         )}
 
-        <button className={styles.btnApp} onClick={handleAppClick} type="button">
-          <span className={styles.playIcon}>▶</span>
-          Ir a la app ahora
+        <button
+          className={styles.btnApp}
+          onClick={() => window.location.assign("#how-it-works")}
+          type="button"
+        >
+          Ver cómo funciona →
         </button>
 
         <p className={styles.disclaimer}>
-          Sin tarjeta de crédito · Gratis para siempre
+          Sin tarjeta de crédito · Cancela cuando quieras · Gratis para siempre en plan básico
         </p>
       </div>
     </section>

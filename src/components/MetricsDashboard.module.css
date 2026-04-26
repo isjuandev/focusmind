@@ -288,17 +288,45 @@
 }
 
 .emailItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: grid;
+  gap: 4px;
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 9px 12px;
 }
 
+.emailMain {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.emailName {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.emailOccupation {
+  font-size: 11px;
+  color: #94a3b8;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.emailMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .emailAddr {
   font-size: 13px;
+  color: #cbd5e1;
 }
 
 .emailTs {

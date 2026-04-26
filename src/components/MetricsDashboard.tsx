@@ -10,7 +10,13 @@ interface MetricsData {
   registrations: number;
   conversionRate: number;
   ctr: number;
-  emails: Array<{ email: string; ts: string }>;
+  emails: Array<{
+    name?: string;
+    lastName?: string;
+    occupation?: "Estudiante" | "Empleado" | "No aplica";
+    email: string;
+    ts: string;
+  }>;
   updatedAt: string;
 }
 
@@ -225,8 +231,20 @@ export default function MetricsDashboard() {
               <div className={styles.emailList}>
                 {data.emails.map((e, i) => (
                   <div key={i} className={styles.emailItem}>
-                    <span className={styles.emailAddr}>{e.email}</span>
-                    <span className={styles.emailTs}>{formatDate(e.ts)}</span>
+                    <div className={styles.emailMain}>
+                      <span className={styles.emailName}>
+                        {e.name || e.lastName
+                          ? `${e.name ?? ""} ${e.lastName ?? ""}`.trim()
+                          : "Sin nombre"}
+                      </span>
+                      <span className={styles.emailOccupation}>
+                        {e.occupation ?? "No definido"}
+                      </span>
+                    </div>
+                    <div className={styles.emailMeta}>
+                      <span className={styles.emailAddr}>{e.email}</span>
+                      <span className={styles.emailTs}>{formatDate(e.ts)}</span>
+                    </div>
                   </div>
                 ))}
               </div>

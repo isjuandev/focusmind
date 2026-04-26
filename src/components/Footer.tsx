@@ -1,7 +1,25 @@
+ "use client";
+
 import styles from "./Footer.module.css";
 import Link from "next/link";
 
 export default function Footer() {
+  async function handleOpenApp(e: React.MouseEvent<HTMLAnchorElement>) {
+    e.preventDefault();
+    const targetUrl = "https://focusmindd1.netlify.app/";
+    try {
+      await fetch("/api/track", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ event: "app_click" }),
+      });
+    } catch {
+      // no-op
+    } finally {
+      window.open(targetUrl, "_blank", "noopener,noreferrer");
+    }
+  }
+
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
@@ -18,6 +36,7 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             className={styles.link}
+            onClick={handleOpenApp}
           >
             Ir a la app →
           </a>

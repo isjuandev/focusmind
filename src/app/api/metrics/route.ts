@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getCount, getEmails, KEYS } from "@/lib/kv";
+import { getCount, getEmails, hasVercelKV, KEYS } from "@/lib/kv";
+import { readFallbackState } from "@/lib/fallbackState";
 
 export const runtime = "edge";
 
@@ -14,6 +15,29 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    if (!hasVercelKV) {
+      const state = readFallbackState(req);
+      const conversionRate =
+        state.visits > 0
+          ? parseFloat(((state.registrations / state.visits) * 100).toFixed(2))
+          : 0;
+      const ctr =
+        state.visits > 0
+          ? parseFloat(((state.appClicks / state.visits) * 100).toFixed(2))
+          : 0;
+
+      return NextResponse.json({
+        visits: state.visits,
+        appClicks: state.appClicks,
+        registrations: state.registrations,
+        conversionRate,
+        ctr,
+        emails: state.emails,
+        storage: "cookie",
+        updatedAt: new Date().toISOString(),
+      });
+    }
+
     const [visits, appClicks, registrations, emails] = await Promise.all([
       getCount(KEYS.visits),
       getCount(KEYS.appClicks),
@@ -33,6 +57,7 @@ export async function GET(req: NextRequest) {
       conversionRate,
       ctr,
       emails,
+      storage: "kv",
       updatedAt: new Date().toISOString(),
     });
   } catch (e) {
