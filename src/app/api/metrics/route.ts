@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCount, getEmails, hasVercelKV, KEYS } from "@/lib/kv";
 import { readFallbackState } from "@/lib/fallbackState";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export async function GET(req: NextRequest) {
   // Protección simple con token — configura METRICS_SECRET en Vercel env vars
@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
       conversionRate,
       ctr,
       emails,
-      storage: "kv",
+      storage: "redis",
       updatedAt: new Date().toISOString(),
     });
   } catch (e) {

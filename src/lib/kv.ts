@@ -1,10 +1,4 @@
-/**
- * Wrapper sobre @vercel/kv con fallback en memoria para desarrollo local.
- * En producción (Vercel) se usan automáticamente las variables KV_REST_API_URL
- * y KV_REST_API_TOKEN que Vercel inyecta al conectar Vercel KV al proyecto.
- */
-
-import { kv } from "@vercel/kv";
+import { createClient, type RedisClientType } from "redis";
 
 // Keys del experimento
 export const KEYS = {
@@ -24,9 +18,25 @@ export interface RegistrationEntry {
   ts: string;
 }
 
-export const hasVercelKV =
-  Boolean(process.env.KV_REST_API_URL) &&
-  Boolean(process.env.KV_REST_API_TOKEN);
+export const hasVercelKV = Boolean(process.env.REDIS_URL);
+
+let redisClient: RedisClientType | null = null;
+
+async function getRedisClient(): Promise<RedisClientType> {
+  if (!process.env.REDIS_URL) {
+    throw new Error("REDIS_URL is not configured");
+  }
+
+  if (redisClient?.isOpen) return redisClient;
+
+  redisClient = createClient({ url: process.env.REDIS_URL });
+  redisClient.on("error", (err: Error) => {
+    console.error("[redis]", err);
+  });
+
+  await redisClient.connect();
+  return redisClient;
+}
 
 const memCounts = new Map<string, number>();
 const memEmails = new Set<string>();
@@ -38,7 +48,7 @@ function warnMissingKVOnce() {
   if (warnedMissingKV || hasVercelKV) return;
   warnedMissingKV = true;
   console.warn(
-    "[kv] Missing KV_REST_API_URL/KV_REST_API_TOKEN. Using in-memory fallback."
+    "[kv] Missing REDIS_URL. Using in-memory fallback."
   );
 }
 
@@ -50,7 +60,8 @@ export async function increment(key: string): Promise<number> {
     memCounts.set(key, nextValue);
     return nextValue;
   }
-  return kv.incr(key);
+  const redis = await getRedisClient();
+  return redis.incr(key);
 }
 
 /** Lee un número guardado como string, default 0 */
@@ -58,8 +69,9 @@ export async function getCount(key: string): Promise<number> {
   if (!hasVercelKV) {
     return memCounts.get(key) ?? 0;
   }
-  const val = await kv.get<number>(key);
-  return val ?? 0;
+  const redis = await getRedisClient();
+  const val = await redis.get(key);
+  return val ? Number(val) : 0;
 }
 
 /** Añade un email al listado (evita duplicados a nivel de kv) */
@@ -84,7 +96,8 @@ export async function addEmail(
   }
 
   // Usamos un SET de Redis para deduplicar
-  const added = await kv.sadd("fm:email_set", email);
+  const redis = await getRedisClient();
+  const added = await redis.sAdd("fm:email_set", email);
   if (!added) return { ok: false, duplicate: true };
 
   const entry: RegistrationEntry = {
@@ -94,7 +107,7 @@ export async function addEmail(
     occupation,
     ts: new Date().toISOString(),
   };
-  await kv.lpush(KEYS.emails, JSON.stringify(entry));
+  await redis.lPush(KEYS.emails, JSON.stringify(entry));
   await increment(KEYS.registrations);
   return { ok: true, duplicate: false };
 }
@@ -105,8 +118,9 @@ export async function getEmails(): Promise<RegistrationEntry[]> {
     return memEmailEntries;
   }
 
-  const raw = await kv.lrange<string>(KEYS.emails, 0, -1);
-  return raw.map((r) => {
-    try { return JSON.parse(r as string); } catch { return null; }
+  const redis = await getRedisClient();
+  const raw = await redis.lRange(KEYS.emails, 0, -1);
+  return raw.map((r: string) => {
+    try { return JSON.parse(r); } catch { return null; }
   }).filter(Boolean) as RegistrationEntry[];
 }

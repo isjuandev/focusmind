@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { hasVercelKV, increment, KEYS } from "@/lib/kv";
 import { readFallbackState, writeFallbackState } from "@/lib/fallbackState";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Unknown event" }, { status: 400 });
     }
 
-    return NextResponse.json({ ok: true, storage: "kv" });
+    return NextResponse.json({ ok: true, storage: "redis" });
   } catch (e) {
     console.error("[track]", e);
     return NextResponse.json({ error: "Internal error" }, { status: 500 });

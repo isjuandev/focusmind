@@ -6,7 +6,7 @@ import {
   writeFallbackState,
 } from "@/lib/fallbackState";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 const VALID_OCCUPATIONS: Occupation[] = ["Estudiante", "Empleado", "No aplica"];
 
 // Validación básica de email
